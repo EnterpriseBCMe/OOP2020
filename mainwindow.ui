@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>780</width>
+         <height>535</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QTextEdit" name="mainEdit"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="file">
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <addaction name="newfile"/>
+    <addaction name="openfile"/>
+    <addaction name="save"/>
+    <addaction name="saveas"/>
+   </widget>
+   <widget class="QMenu" name="operation">
+    <property name="title">
+     <string>操作</string>
+    </property>
+    <addaction name="findandreplace"/>
+    <addaction name="format"/>
+    <addaction name="layout"/>
+   </widget>
+   <addaction name="file"/>
+   <addaction name="operation"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="newfile">
+   <property name="text">
+    <string>新建</string>
+   </property>
+  </action>
+  <action name="openfile">
+   <property name="text">
+    <string>打开</string>
+   </property>
+  </action>
+  <action name="save">
+   <property name="text">
+    <string>保存</string>
+   </property>
+  </action>
+  <action name="saveas">
+   <property name="text">
+    <string>另存为</string>
+   </property>
+  </action>
+  <action name="findandreplace">
+   <property name="text">
+    <string>查找与替换</string>
+   </property>
+  </action>
+  <action name="format">
+   <property name="text">
+    <string>文字格式</string>
+   </property>
+  </action>
+  <action name="layout">
+   <property name="text">
+    <string>排版设置</string>
+   </property>
+  </action>
+  <action name="undo">
+   <property name="text">
+    <string>撤销</string>
+   </property>
+  </action>
+  <action name="redo">
+   <property name="text">
+    <string>重做</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
