@@ -6,9 +6,27 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>799</width>
     <height>600</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>999999</width>
+    <height>999999</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -25,8 +43,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>780</width>
-         <height>535</height>
+         <width>779</width>
+         <height>537</height>
         </rect>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -44,8 +62,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>23</height>
+     <width>799</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="file">
@@ -56,6 +74,8 @@
     <addaction name="openfile"/>
     <addaction name="save"/>
     <addaction name="saveas"/>
+    <addaction name="separator"/>
+    <addaction name="exit"/>
    </widget>
    <widget class="QMenu" name="operation">
     <property name="title">
@@ -64,6 +84,9 @@
     <addaction name="findandreplace"/>
     <addaction name="format"/>
     <addaction name="layout"/>
+    <addaction name="separator"/>
+    <addaction name="separator"/>
+    <addaction name="timeanddate"/>
    </widget>
    <addaction name="file"/>
    <addaction name="operation"/>
@@ -112,6 +135,16 @@
   <action name="redo">
    <property name="text">
     <string>重做</string>
+   </property>
+  </action>
+  <action name="timeanddate">
+   <property name="text">
+    <string>时间/日期</string>
+   </property>
+  </action>
+  <action name="exit">
+   <property name="text">
+    <string>退出</string>
    </property>
   </action>
  </widget>

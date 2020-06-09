@@ -1,4 +1,4 @@
-#include "findreplace.h"
+﻿#include "findreplace.h"
 #include "ui_findreplace.h"
 #include <QAction>
 
@@ -20,9 +20,10 @@ findreplace::~findreplace()
 
 void findreplace::on_find_clicked()
 {
-    emit sendFindString(ui->le_find->text());
+    emit sendFindString(ui->le_find->text(), ui->caseSensitive->isChecked(), ui->cycle->isChecked());
 }
+
 void findreplace::on_replace_clicked()
 {
-    emit sendReplaceString(ui->le_find->text(),ui->le_replace->text());
+    emit sendReplaceString(ui->le_find->text(),ui->le_replace->text(), ui->caseSensitive->isChecked(), ui->cycle->isChecked());
 }

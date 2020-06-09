@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QString>
@@ -8,6 +8,8 @@
 #include <QDebug>
 #include <QPalette>
 #include <QFontDialog>
+#include <QDateTime>
+#include <QRegularExpression>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -21,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->undo->setShortcut(tr("ctrl+z"));
     ui->redo->setShortcut(tr("ctrl+y"));
     ui->findandreplace->setShortcut(tr("ctrl+f"));
+    ui->exit->setShortcut(tr("ctrl+w"));
+    ui->timeanddate->setShortcut(tr("F5"));
 
     connect(ui->newfile,&QAction::triggered,this,&MainWindow::newFile);
     connect(ui->openfile,&QAction::triggered,this,&MainWindow::openFile);
@@ -29,12 +33,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->findandreplace,&QAction::triggered,this,&MainWindow::findAndReplace);
     connect(ui->format,&QAction::triggered,this,&MainWindow::setFont);
     connect(ui->layout,&QAction::triggered,this,&MainWindow::setLayout);
+    connect(ui->exit,&QAction::triggered,this,&MainWindow::closeExe);
+    connect(ui->timeanddate,&QAction::triggered,this,&MainWindow::insertTimeAndDate);
     this->fr=new findreplace(this);
     this->lo=new class layout(this);
 
-    connect(fr,SIGNAL(sendFindString(QString)),this,SLOT(receiveFindString(QString)));
-    connect(fr,SIGNAL(sendReplaceString(QString,QString)),this,SLOT(receiveReplaceString(QString,QString)));
-    connect(lo,SIGNAL(sendLayout(QString,qreal, qreal, bool)),this,SLOT(receiveLayout(QString ,qreal,qreal,bool)));
+    connect(fr,SIGNAL(sendFindString(QString,bool,bool)),this,SLOT(receiveFindString(QString,bool,bool)));
+    connect(fr,SIGNAL(sendReplaceString(QString,QString,bool,bool)),this,SLOT(receiveReplaceString(QString,QString,bool,bool)));
+    connect(lo,SIGNAL(sendLayout(QString, qreal, qreal, qreal)),this,SLOT(receiveLayout(QString ,qreal,qreal,qreal)));
 
     this->setWindowTitle(tr("简单的文档编辑系统"));
 }
@@ -43,6 +49,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
 void MainWindow::newFile()
 {
     if(ui->mainEdit->toPlainText()!="")
@@ -54,13 +61,12 @@ void MainWindow::newFile()
     }
     ui->mainEdit->setText("");
 }
-void MainWindow::openFile()
+
+void MainWindow::openFile()    //TODO:打开和保存文件时的pdf/doc/txt/html互转
 {
-    filename=QFileDialog::getOpenFileName(this, tr("打开文档"), ".", tr("文本文档(*.txt)"));
-    if(filename.length() == 0) {
-        QMessageBox::information(NULL, tr("Path"), tr("未选择文件"));
+    filename=QFileDialog::getOpenFileName(this, tr("打开文档"), ".", tr("文本文档(*.txt);;网页(*.htm *.html)"));
+    if(filename.length() == 0)
         return;
-    }
     QFile textFile(filename);
     if(!textFile.exists())
     {
@@ -73,50 +79,57 @@ void MainWindow::openFile()
         return;
     }
     QTextStream in(&textFile);
-    ui->mainEdit->setText(in.readAll());
+    if(QRegularExpression("html$").match(filename).hasMatch())  //TODO:中文乱码问题
+        ui->mainEdit->setHtml(in.readAll());
+    else
+        ui->mainEdit->setText(in.readAll());
     this->setWindowTitle(filename);
     textFile.close();
 }
-void MainWindow::save()//TODO:保存为富文本格式如HTML
+
+void MainWindow::save()
 {
     if(filename=="")
     {
-        filename=QFileDialog::getSaveFileName(this,tr("保存"),".","文本文档(*.txt)");
+        filename=QFileDialog::getSaveFileName(this,tr("保存"),".","文本文档(*.txt);;网页(*.htm *.html)");
         if(filename=="")
-        {
-            QMessageBox::information(NULL, tr("Path"), tr("未选择文件"));
             return;
-        }
     }
     this->setWindowTitle(filename);
     QFile textFile(filename);
     if(!textFile.open(QIODevice::WriteOnly|QIODevice::Text))
-    {
-        QMessageBox::information(NULL, tr("Path"), tr("文件打开失败"));
         return;
-    }
     QTextStream out(&textFile);
-    out<<ui->mainEdit->toPlainText();
+    if(QRegularExpression("html$").match(filename).hasMatch())
+        out << ui->mainEdit->toHtml();
+    else
+        out << ui->mainEdit->toPlainText();
+
     textFile.close();
 }
+
 void MainWindow::saveAs()
 {
     filename=QFileDialog::getSaveFileName(this,tr("另存为"),".","文本文档(*.txt)");
     QFile textFile(filename);
     if(!textFile.open(QIODevice::WriteOnly|QIODevice::Text))
-    {
-        QMessageBox::information(NULL, tr("Path"), tr("文件打开失败"));
         return;
-    }
     this->setWindowTitle(filename);
     QTextStream out(&textFile);
     out<<ui->mainEdit->toPlainText();
     textFile.close();
 }
+
+void MainWindow::closeExe()
+{
+    this->close();
+}
+
 void MainWindow::findAndReplace()
 {
     fr->show();
 }
+
 void MainWindow::setFont()
 {
     bool ok;
@@ -129,12 +142,13 @@ void MainWindow::setFont()
     }
     cursor.endEditBlock();
 }
+
 void MainWindow::setLayout()
 {
     lo->show();
 }
 
-void MainWindow::receiveFindString(QString fs)
+void MainWindow::receiveFindString(QString fs, bool isCaseSensetive, bool isCycle)
 {
     this->findString=fs;
     if (findString.trimmed().isEmpty())
@@ -142,13 +156,16 @@ void MainWindow::receiveFindString(QString fs)
         QMessageBox::information(NULL, tr("Path"), "空字符串!");
         return;
     }
-    if(!ui->mainEdit->find(findString))
+    if(!ui->mainEdit->find(findString, isCaseSensetive ? QTextDocument::FindFlags() : QTextDocument::FindCaseSensitively))
     {
-        QMessageBox::information(NULL, tr("Path"), "未找到指定字符串!");
-        return;
+        if(isCycle)
+            ui->mainEdit->moveCursor(QTextCursor::Start);
+        else
+            QMessageBox::information(NULL, tr("Path"), "未找到指定字符串!");
     }
 }
-void MainWindow::receiveReplaceString(QString fs,QString rs)
+
+void MainWindow::receiveReplaceString(QString fs,QString rs, bool isCaseSensetive, bool isCycle)  // TODO:分解成"替换下一个"+"全部替换"两个选项
 {
     this->replaceString=rs;
     int count=0;
@@ -166,7 +183,7 @@ void MainWindow::receiveReplaceString(QString fs,QString rs)
     QMessageBox::information(NULL, tr("Path"), "替换完成,共替换"+QString::number(count)+"处");
 }
 
-void MainWindow::receiveLayout(QString alignment,qreal lineSpacing, qreal margin, bool indent)
+void MainWindow::receiveLayout(QString alignment,qreal lineSpacing, qreal margin, qreal indent)
 {
     QTextCursor cursor=ui->mainEdit->textCursor();
     cursor.beginEditBlock();
@@ -184,7 +201,15 @@ void MainWindow::receiveLayout(QString alignment,qreal lineSpacing, qreal margin
         blockFormat.setTopMargin(margin);
         blockFormat.setBottomMargin(margin);
     }
-    //TODO:首行缩进
+
+    blockFormat.setTextIndent(indent * ui->mainEdit->fontMetrics().width("一"));
+
     cursor.setBlockFormat(blockFormat);
     cursor.endEditBlock();
+}
+
+void MainWindow::insertTimeAndDate()
+{
+    QTextCursor cursor = ui->mainEdit->textCursor();
+    cursor.insertText(QDateTime::currentDateTime().toString());
 }

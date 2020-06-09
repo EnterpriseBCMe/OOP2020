@@ -1,5 +1,7 @@
-#ifndef FINDREPLACE_H
+﻿#ifndef FINDREPLACE_H
 #define FINDREPLACE_H
+
+#pragma execution_character_set("utf-8")
 
 #include <QDialog>
 
@@ -18,8 +20,8 @@ public:
 private:
     Ui::findreplace *ui;
 signals:
-    void sendFindString(QString);
-    void sendReplaceString(QString,QString);
+    void sendFindString(QString, bool, bool);
+    void sendReplaceString(QString,QString, bool, bool);
 public slots:
     void on_find_clicked();
     void on_replace_clicked();

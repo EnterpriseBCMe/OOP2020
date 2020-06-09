@@ -1,5 +1,7 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+
+#pragma execution_character_set("utf-8")
 
 #include <QMainWindow>
 #include <QFile>
@@ -23,17 +25,19 @@ public:
     void openFile();
     void save();
     void saveAs();
+    void closeExe();
     void findAndReplace();
     void setFont();
     void setLayout();
+    void insertTimeAndDate();
 
 private:
     Ui::MainWindow *ui;
     findreplace* fr;
     class layout* lo;
 private slots:
-    void receiveFindString(QString fs);
-    void receiveReplaceString(QString fs,QString rs);
-    void receiveLayout(QString alignment,qreal lineSpacing, qreal margin, bool indent);
+    void receiveFindString(QString fs, bool isCaseSensetive, bool isCycle);
+    void receiveReplaceString(QString fs,QString rs, bool isCaseSensetive, bool isCycle);
+    void receiveLayout(QString alignment,qreal lineSpacing, qreal margin, qreal indent);
 };
 #endif // MAINWINDOW_H
