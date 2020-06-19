@@ -21,7 +21,7 @@ private:
     Ui::findreplace *ui;
 signals:
     void sendFindString(QString, bool, bool);
-    void sendReplaceString(QString,QString, bool, bool);
+    void sendReplaceString(QString, QString, bool);
 public slots:
     void on_find_clicked();
     void on_replace_clicked();

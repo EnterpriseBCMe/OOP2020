@@ -25,5 +25,5 @@ void findreplace::on_find_clicked()
 
 void findreplace::on_replace_clicked()
 {
-    emit sendReplaceString(ui->le_find->text(),ui->le_replace->text(), ui->caseSensitive->isChecked(), ui->cycle->isChecked());
+    emit sendReplaceString(ui->le_find->text(),ui->le_replace->text(), ui->caseSensitive->isChecked());
 }

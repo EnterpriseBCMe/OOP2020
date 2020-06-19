@@ -16,17 +16,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    autosave.cpp \
     findreplace.cpp \
     layout.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    autosave.h \
     findreplace.h \
     layout.h \
     mainwindow.h
 
 FORMS += \
+    autosave.ui \
     findreplace.ui \
     layout.ui \
     mainwindow.ui
@@ -39,3 +42,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES += \
     qt_zh_CN.qm \
     要求
+
+RESOURCES += \
+    image/image.qrc

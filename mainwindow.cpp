@@ -10,21 +10,18 @@
 #include <QFontDialog>
 #include <QDateTime>
 #include <QRegularExpression>
+#include <QColorDialog>
+#include <QDragEnterEvent>
+#include <QMimeData>
+#include <QDropEvent>
+#include <QUrl>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->newfile->setShortcut(tr("ctrl+n"));
-    ui->openfile->setShortcut(tr("ctrl+o"));
-    ui->save->setShortcut(tr("ctrl+s"));
-    ui->saveas->setShortcut(tr("ctrl+shift+s"));
-    ui->undo->setShortcut(tr("ctrl+z"));
-    ui->redo->setShortcut(tr("ctrl+y"));
-    ui->findandreplace->setShortcut(tr("ctrl+f"));
-    ui->exit->setShortcut(tr("ctrl+w"));
-    ui->timeanddate->setShortcut(tr("F5"));
 
     connect(ui->newfile,&QAction::triggered,this,&MainWindow::newFile);
     connect(ui->openfile,&QAction::triggered,this,&MainWindow::openFile);
@@ -35,14 +32,22 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->layout,&QAction::triggered,this,&MainWindow::setLayout);
     connect(ui->exit,&QAction::triggered,this,&MainWindow::closeExe);
     connect(ui->timeanddate,&QAction::triggered,this,&MainWindow::insertTimeAndDate);
-    this->fr=new findreplace(this);
-    this->lo=new class layout(this);
+    connect(ui->fontcolor,&QAction::triggered,this,&MainWindow::setFontColor);
+    connect(ui->autosave,&QAction::triggered,this,&MainWindow::autoSave);
+    this->fr = new findreplace(this);
+    this->lo = new class layout(this);
+    this->as = new autosave(this);
 
     connect(fr,SIGNAL(sendFindString(QString,bool,bool)),this,SLOT(receiveFindString(QString,bool,bool)));
-    connect(fr,SIGNAL(sendReplaceString(QString,QString,bool,bool)),this,SLOT(receiveReplaceString(QString,QString,bool,bool)));
+    connect(fr,SIGNAL(sendReplaceString(QString,QString,bool)),this,SLOT(receiveReplaceString(QString,QString,bool)));
     connect(lo,SIGNAL(sendLayout(QString, qreal, qreal, qreal)),this,SLOT(receiveLayout(QString ,qreal,qreal,qreal)));
+    connect(as,SIGNAL(sendAutoSave(bool, int)),this,SLOT(receiveAutoSave(bool, int)));
 
     this->setWindowTitle(tr("简单的文档编辑系统"));
+    this->setAcceptDrops(true);
+
+    timer_autosave = new QTimer(this);
+    connect(timer_autosave, SIGNAL(timeout()), this, SLOT(handleAutoSave()));
 }
 
 MainWindow::~MainWindow()
@@ -64,7 +69,7 @@ void MainWindow::newFile()
 
 void MainWindow::openFile()    //TODO:打开和保存文件时的pdf/doc/txt/html互转
 {
-    filename=QFileDialog::getOpenFileName(this, tr("打开文档"), ".", tr("文本文档(*.txt);;网页(*.htm *.html)"));
+    filename=QFileDialog::getOpenFileName(this, tr("打开文档"), ".", tr("文本文档(*.txt);;网页(*.htm;*.html)"));
     if(filename.length() == 0)
         return;
     QFile textFile(filename);
@@ -91,7 +96,7 @@ void MainWindow::save()
 {
     if(filename=="")
     {
-        filename=QFileDialog::getSaveFileName(this,tr("保存"),".","文本文档(*.txt);;网页(*.htm *.html)");
+        filename=QFileDialog::getSaveFileName(this,tr("保存"),".","文本文档(*.txt);;网页(*.htm;*.html)");
         if(filename=="")
             return;
     }
@@ -151,7 +156,7 @@ void MainWindow::setLayout()
 void MainWindow::receiveFindString(QString fs, bool isCaseSensetive, bool isCycle)
 {
     this->findString=fs;
-    if (findString.trimmed().isEmpty())
+    if(findString.trimmed().isEmpty())
     {
         QMessageBox::information(NULL, tr("Path"), "空字符串!");
         return;
@@ -165,7 +170,7 @@ void MainWindow::receiveFindString(QString fs, bool isCaseSensetive, bool isCycl
     }
 }
 
-void MainWindow::receiveReplaceString(QString fs,QString rs, bool isCaseSensetive, bool isCycle)  // TODO:分解成"替换下一个"+"全部替换"两个选项
+void MainWindow::receiveReplaceString(QString fs, QString rs, bool isCaseSensetive)  // TODO:分解成"替换下一个"+"全部替换"两个选项
 {
     this->replaceString=rs;
     int count=0;
@@ -212,4 +217,66 @@ void MainWindow::insertTimeAndDate()
 {
     QTextCursor cursor = ui->mainEdit->textCursor();
     cursor.insertText(QDateTime::currentDateTime().toString());
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent* event)
+{
+    QString extension = event->mimeData()->urls()[0].fileName();
+    if(!(QRegExp("(txt$)|(html$)|(htm$)").exactMatch(extension)))
+        event->acceptProposedAction();
+    else
+        event->ignore();
+}
+
+void MainWindow::dropEvent(QDropEvent* event)
+{
+    const QMimeData* mimeData = event->mimeData();
+    if(mimeData->hasUrls())
+    {
+        QString fileName = mimeData->urls().at(0).toLocalFile();
+        if(!fileName.isEmpty())
+        {
+            QFile file(fileName);
+            if(!file.open(QIODevice::ReadOnly))
+                return;
+            QTextStream in(&file);
+            ui->mainEdit->setText(in.readAll());
+        }
+    }
+}
+
+void MainWindow::setFontColor()
+{
+    ui->mainEdit->setTextColor(QColorDialog::getColor(Qt::white, this, "颜色"));
+}
+
+void MainWindow::autoSave()
+{
+    as->show();
+}
+
+void MainWindow::receiveAutoSave(bool isAutoSave, int interval)
+{
+    if(isAutoSave)
+        MainWindow::timer_autosave->start(interval * 1000);
+    else
+        MainWindow::timer_autosave->stop();
+}
+
+void MainWindow::handleAutoSave()
+{
+    if(filename == "")
+        return;
+    else
+    {
+        QFile textFile(filename);
+        if(!textFile.open(QIODevice::WriteOnly|QIODevice::Text))
+            return;
+        QTextStream out(&textFile);
+        if(QRegularExpression("html$").match(filename).hasMatch())
+            out << ui->mainEdit->toHtml();
+        else
+            out << ui->mainEdit->toPlainText();
+        textFile.close();
+    }
 }
