@@ -15,11 +15,13 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDialog>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
@@ -27,7 +29,7 @@ QT_BEGIN_NAMESPACE
 class Ui_findreplace
 {
 public:
-    QHBoxLayout *horizontalLayout_3;
+    QGridLayout *gridLayout;
     QVBoxLayout *verticalLayout;
     QLabel *label_find;
     QHBoxLayout *horizontalLayout_2;
@@ -36,8 +38,11 @@ public:
     QLabel *label_replace;
     QHBoxLayout *horizontalLayout;
     QLineEdit *le_replace;
-    QPushButton *replace;
+    QPushButton *replaceNextOne;
+    QHBoxLayout *horizontalLayout_3;
     QCheckBox *caseSensitive;
+    QSpacerItem *horizontalSpacer;
+    QPushButton *replaceAll;
     QCheckBox *cycle;
 
     void setupUi(QDialog *findreplace)
@@ -52,8 +57,8 @@ public:
         findreplace->setSizePolicy(sizePolicy);
         findreplace->setMinimumSize(QSize(0, 0));
         findreplace->setMaximumSize(QSize(999999, 999999));
-        horizontalLayout_3 = new QHBoxLayout(findreplace);
-        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+        gridLayout = new QGridLayout(findreplace);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
         verticalLayout = new QVBoxLayout();
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         label_find = new QLabel(findreplace);
@@ -88,18 +93,32 @@ public:
 
         horizontalLayout->addWidget(le_replace);
 
-        replace = new QPushButton(findreplace);
-        replace->setObjectName(QStringLiteral("replace"));
+        replaceNextOne = new QPushButton(findreplace);
+        replaceNextOne->setObjectName(QStringLiteral("replaceNextOne"));
 
-        horizontalLayout->addWidget(replace);
+        horizontalLayout->addWidget(replaceNextOne);
 
 
         verticalLayout->addLayout(horizontalLayout);
 
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
         caseSensitive = new QCheckBox(findreplace);
         caseSensitive->setObjectName(QStringLiteral("caseSensitive"));
 
-        verticalLayout->addWidget(caseSensitive);
+        horizontalLayout_3->addWidget(caseSensitive);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer);
+
+        replaceAll = new QPushButton(findreplace);
+        replaceAll->setObjectName(QStringLiteral("replaceAll"));
+
+        horizontalLayout_3->addWidget(replaceAll);
+
+
+        verticalLayout->addLayout(horizontalLayout_3);
 
         cycle = new QCheckBox(findreplace);
         cycle->setObjectName(QStringLiteral("cycle"));
@@ -108,7 +127,7 @@ public:
         verticalLayout->addWidget(cycle);
 
 
-        horizontalLayout_3->addLayout(verticalLayout);
+        gridLayout->addLayout(verticalLayout, 0, 0, 1, 1);
 
 
         retranslateUi(findreplace);
@@ -122,8 +141,9 @@ public:
         label_find->setText(QApplication::translate("findreplace", "\346\237\245\346\211\276", Q_NULLPTR));
         findNext->setText(QApplication::translate("findreplace", "\346\237\245\346\211\276\344\270\213\344\270\200\344\270\252", Q_NULLPTR));
         label_replace->setText(QApplication::translate("findreplace", "\346\233\277\346\215\242", Q_NULLPTR));
-        replace->setText(QApplication::translate("findreplace", "\346\233\277\346\215\242", Q_NULLPTR));
+        replaceNextOne->setText(QApplication::translate("findreplace", "\346\233\277\346\215\242\344\270\213\344\270\200\344\270\252", Q_NULLPTR));
         caseSensitive->setText(QApplication::translate("findreplace", "\345\214\272\345\210\206\345\244\247\345\260\217\345\206\231", Q_NULLPTR));
+        replaceAll->setText(QApplication::translate("findreplace", "\345\205\250\351\203\250\346\233\277\346\215\242", Q_NULLPTR));
         cycle->setText(QApplication::translate("findreplace", "\345\276\252\347\216\257", Q_NULLPTR));
     } // retranslateUi
 

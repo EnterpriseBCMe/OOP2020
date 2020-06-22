@@ -16,15 +16,15 @@ class findreplace : public QDialog
 public:
     explicit findreplace(QWidget *parent = nullptr,QString findString="",QString replaceString="");
     ~findreplace();
-
 private:
     Ui::findreplace *ui;
 signals:
     void sendFindString(QString, bool, bool);
-    void sendReplaceString(QString, QString, bool);
-public slots:
-    void on_find_clicked();
-    void on_replace_clicked();
+    void sendReplaceString(QString, QString, bool, bool);
+private slots:
+    void on_findNext_clicked();
+    void on_replaceAll_clicked();
+    void on_replaceNextOne_clicked();
 };
 
 #endif // FINDREPLACE_H

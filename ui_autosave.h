@@ -15,17 +15,23 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDialog>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpinBox>
+#include <QtWidgets/QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_autosave
 {
 public:
+    QGridLayout *gridLayout;
+    QVBoxLayout *verticalLayout;
     QCheckBox *autoSave;
+    QHBoxLayout *horizontalLayout;
     QLabel *label;
     QSpinBox *changeInterval;
     QPushButton *accept;
@@ -34,23 +40,43 @@ public:
     {
         if (autosave->objectName().isEmpty())
             autosave->setObjectName(QStringLiteral("autosave"));
-        autosave->resize(371, 307);
+        autosave->resize(242, 101);
+        gridLayout = new QGridLayout(autosave);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         autoSave = new QCheckBox(autosave);
         autoSave->setObjectName(QStringLiteral("autoSave"));
-        autoSave->setGeometry(QRect(20, 20, 101, 18));
+
+        verticalLayout->addWidget(autoSave);
+
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         label = new QLabel(autosave);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(20, 45, 91, 31));
+
+        horizontalLayout->addWidget(label);
+
         changeInterval = new QSpinBox(autosave);
         changeInterval->setObjectName(QStringLiteral("changeInterval"));
         changeInterval->setEnabled(false);
-        changeInterval->setGeometry(QRect(110, 50, 161, 22));
         changeInterval->setMinimum(1);
         changeInterval->setMaximum(3600);
         changeInterval->setValue(30);
+
+        horizontalLayout->addWidget(changeInterval);
+
+
+        verticalLayout->addLayout(horizontalLayout);
+
         accept = new QPushButton(autosave);
         accept->setObjectName(QStringLiteral("accept"));
-        accept->setGeometry(QRect(20, 180, 80, 20));
+
+        verticalLayout->addWidget(accept);
+
+
+        gridLayout->addLayout(verticalLayout, 0, 0, 1, 1);
+
 
         retranslateUi(autosave);
 

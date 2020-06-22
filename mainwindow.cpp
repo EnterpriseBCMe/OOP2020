@@ -1,5 +1,6 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "mytextedit.h"
 #include <QFileDialog>
 #include <QString>
 #include <QMessageBox>
@@ -16,6 +17,7 @@
 #include <QDropEvent>
 #include <QUrl>
 #include <QTimer>
+#include <QImageReader>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -39,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->as = new autosave(this);
 
     connect(fr,SIGNAL(sendFindString(QString,bool,bool)),this,SLOT(receiveFindString(QString,bool,bool)));
-    connect(fr,SIGNAL(sendReplaceString(QString,QString,bool)),this,SLOT(receiveReplaceString(QString,QString,bool)));
+    connect(fr,SIGNAL(sendReplaceString(QString,QString,bool,bool)),this,SLOT(receiveReplaceString(QString,QString,bool,bool)));
     connect(lo,SIGNAL(sendLayout(QString, qreal, qreal, qreal)),this,SLOT(receiveLayout(QString ,qreal,qreal,qreal)));
     connect(as,SIGNAL(sendAutoSave(bool, int)),this,SLOT(receiveAutoSave(bool, int)));
 
@@ -65,6 +67,7 @@ void MainWindow::newFile()
 
     }
     ui->mainEdit->setText("");
+    this->setWindowTitle("新文件");
 }
 
 void MainWindow::openFile()    //TODO:打开和保存文件时的pdf/doc/txt/html互转
@@ -161,7 +164,7 @@ void MainWindow::receiveFindString(QString fs, bool isCaseSensetive, bool isCycl
         QMessageBox::information(NULL, tr("Path"), "空字符串!");
         return;
     }
-    if(!ui->mainEdit->find(findString, isCaseSensetive ? QTextDocument::FindFlags() : QTextDocument::FindCaseSensitively))
+    if(!ui->mainEdit->find(findString, isCaseSensetive ? QTextDocument::FindCaseSensitively : QTextDocument::FindFlag()))
     {
         if(isCycle)
             ui->mainEdit->moveCursor(QTextCursor::Start);
@@ -170,22 +173,35 @@ void MainWindow::receiveFindString(QString fs, bool isCaseSensetive, bool isCycl
     }
 }
 
-void MainWindow::receiveReplaceString(QString fs, QString rs, bool isCaseSensetive)  // TODO:分解成"替换下一个"+"全部替换"两个选项
+void MainWindow::receiveReplaceString(QString fs, QString rs, bool isCaseSensetive, bool isAll)
 {
     this->replaceString=rs;
-    int count=0;
     QTextCursor cursor=ui->mainEdit->textCursor();
     cursor.beginEditBlock();
-    cursor.setPosition(0);
-    while(ui->mainEdit->find(fs))
+    if(isAll)
     {
-        QTextCursor replace_cursor=ui->mainEdit->textCursor();
-        replace_cursor.removeSelectedText();
-        replace_cursor.insertText(rs);
-        count++;
+        int count=0;
+        cursor.setPosition(0);
+        while(ui->mainEdit->find(fs, isCaseSensetive ? QTextDocument::FindCaseSensitively : QTextDocument::FindFlag()))
+        {
+            ui->mainEdit->textCursor().removeSelectedText();
+            ui->mainEdit->textCursor().insertText(rs);
+            count++;
+        }
+        QMessageBox::information(NULL, tr("Path"), "替换完成,共替换"+QString::number(count)+"处");
     }
+    else
+    {
+        if(ui->mainEdit->find(fs, isCaseSensetive ? QTextDocument::FindCaseSensitively : QTextDocument::FindFlag()))
+        {
+            ui->mainEdit->textCursor().removeSelectedText();
+            ui->mainEdit->textCursor().insertText(rs);
+        }
+        else
+            QMessageBox::information(NULL, tr("Path"), "未找到指定的字符串");
+    }
+
     cursor.endEditBlock();
-    QMessageBox::information(NULL, tr("Path"), "替换完成,共替换"+QString::number(count)+"处");
 }
 
 void MainWindow::receiveLayout(QString alignment,qreal lineSpacing, qreal margin, qreal indent)
@@ -222,7 +238,7 @@ void MainWindow::insertTimeAndDate()
 void MainWindow::dragEnterEvent(QDragEnterEvent* event)
 {
     QString extension = event->mimeData()->urls()[0].fileName();
-    if(!(QRegExp("(txt$)|(html$)|(htm$)").exactMatch(extension)))
+    if(QRegularExpression("(txt$)|(html$)|(htm$)|(png$)|(jpg$)|(jpeg$)|(bmp$)|(gif$)").match(extension).hasMatch())
         event->acceptProposedAction();
     else
         event->ignore();
@@ -236,11 +252,25 @@ void MainWindow::dropEvent(QDropEvent* event)
         QString fileName = mimeData->urls().at(0).toLocalFile();
         if(!fileName.isEmpty())
         {
-            QFile file(fileName);
-            if(!file.open(QIODevice::ReadOnly))
-                return;
-            QTextStream in(&file);
-            ui->mainEdit->setText(in.readAll());
+            newFile();
+            // 打开图片
+            if(QRegularExpression("(png$)|(jpg$)|(jpeg$)|(bmp$)|(gif$)").match(fileName).hasMatch())
+            {
+                QImage image = QImageReader(fileName).read();
+                QTextCursor cursor = ui->mainEdit->textCursor();
+                QTextDocument *document = ui->mainEdit->document();
+                document->addResource(QTextDocument::ImageResource, QUrl(fileName), image);
+                cursor.insertImage(fileName);
+            }
+            // 打开文本
+            else
+            {
+                QFile file(fileName);
+                if(!file.open(QIODevice::ReadOnly))
+                    return;
+                QTextStream in(&file);
+                ui->mainEdit->setText(in.readAll());
+            }
         }
     }
 }

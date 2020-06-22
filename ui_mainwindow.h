@@ -20,9 +20,9 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
+#include "mytextedit.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -53,7 +53,7 @@ public:
     QScrollArea *scrollArea;
     QWidget *scrollAreaWidgetContents;
     QHBoxLayout *horizontalLayout_2;
-    QTextEdit *mainEdit;
+    myTextEdit *mainEdit;
     QMenuBar *menubar;
     QMenu *file;
     QMenu *operation;
@@ -77,7 +77,7 @@ public:
         MainWindow->setMinimumSize(QSize(0, 0));
         MainWindow->setMaximumSize(QSize(999999, 999999));
         MainWindow->setMouseTracking(false);
-        MainWindow->setAcceptDrops(false);
+        MainWindow->setAcceptDrops(true);
         newfile = new QAction(MainWindow);
         newfile->setObjectName(QStringLiteral("newfile"));
         QIcon icon;
@@ -187,11 +187,12 @@ public:
         scrollAreaWidgetContents->setGeometry(QRect(0, 0, 669, 684));
         horizontalLayout_2 = new QHBoxLayout(scrollAreaWidgetContents);
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        mainEdit = new QTextEdit(scrollAreaWidgetContents);
+        mainEdit = new myTextEdit(scrollAreaWidgetContents);
         mainEdit->setObjectName(QStringLiteral("mainEdit"));
         QFont font;
         font.setPointSize(12);
         mainEdit->setFont(font);
+        mainEdit->setAcceptDrops(true);
 
         horizontalLayout_2->addWidget(mainEdit);
 
@@ -221,6 +222,7 @@ public:
         MainWindow->setStatusBar(statusbar);
         toolBar = new QToolBar(MainWindow);
         toolBar->setObjectName(QStringLiteral("toolBar"));
+        toolBar->setAcceptDrops(false);
         toolBar->setIconSize(QSize(24, 24));
         toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
         toolBar->setFloatable(true);

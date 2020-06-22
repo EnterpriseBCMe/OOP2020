@@ -31,8 +31,8 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_3">
-   <item>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QLabel" name="label_find">
@@ -68,20 +68,44 @@
         <widget class="QLineEdit" name="le_replace"/>
        </item>
        <item>
-        <widget class="QPushButton" name="replace">
+        <widget class="QPushButton" name="replaceNextOne">
          <property name="text">
-          <string>替换</string>
+          <string>替换下一个</string>
          </property>
         </widget>
        </item>
       </layout>
      </item>
      <item>
-      <widget class="QCheckBox" name="caseSensitive">
-       <property name="text">
-        <string>区分大小写</string>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QCheckBox" name="caseSensitive">
+         <property name="text">
+          <string>区分大小写</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="replaceAll">
+         <property name="text">
+          <string>全部替换</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
       <widget class="QCheckBox" name="cycle">

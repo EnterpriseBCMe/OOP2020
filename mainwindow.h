@@ -45,7 +45,7 @@ private:
     autosave* as;
 private slots:
     void receiveFindString(QString fs, bool isCaseSensetive, bool isCycle);
-    void receiveReplaceString(QString fs, QString rs, bool isCaseSensetive);
+    void receiveReplaceString(QString fs, QString rs, bool isCaseSensetive, bool isAll);
     void receiveLayout(QString alignment, qreal lineSpacing, qreal margin, qreal indent);
     void receiveAutoSave(bool isAutoSave, int interval);
     void handleAutoSave();
