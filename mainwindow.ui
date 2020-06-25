@@ -138,7 +138,16 @@
     <property name="title">
      <string>设置(&amp;S)</string>
     </property>
+    <widget class="QMenu" name="menu_Z">
+     <property name="title">
+      <string>缩放(&amp;Z)</string>
+     </property>
+     <addaction name="zoomIn"/>
+     <addaction name="zoomOut"/>
+    </widget>
     <addaction name="autosave"/>
+    <addaction name="insertoroverwrite"/>
+    <addaction name="menu_Z"/>
    </widget>
    <addaction name="file"/>
    <addaction name="operation"/>
@@ -395,6 +404,38 @@
    </property>
    <property name="text">
     <string>自动保存(&amp;A)</string>
+   </property>
+  </action>
+  <action name="insertoroverwrite">
+   <property name="text">
+    <string>改写模式</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="zoomIn">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/放大.png</normaloff>:/new/prefix1/放大.png</iconset>
+   </property>
+   <property name="text">
+    <string>放大(&amp;I)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+=</string>
+   </property>
+  </action>
+  <action name="zoomOut">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/缩小.png</normaloff>:/new/prefix1/缩小.png</iconset>
+   </property>
+   <property name="text">
+    <string>缩小(&amp;O)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+-</string>
    </property>
   </action>
  </widget>

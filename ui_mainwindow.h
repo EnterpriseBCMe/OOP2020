@@ -48,6 +48,9 @@ public:
     QAction *delete_2;
     QAction *fontcolor;
     QAction *autosave;
+    QAction *insertoroverwrite;
+    QAction *zoomIn;
+    QAction *zoomOut;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout;
     QScrollArea *scrollArea;
@@ -61,6 +64,7 @@ public:
     QMenu *menu_C;
     QMenu *menu_T;
     QMenu *menu_S;
+    QMenu *menu_Z;
     QStatusBar *statusbar;
     QToolBar *toolBar;
 
@@ -173,6 +177,18 @@ public:
         QIcon icon18;
         icon18.addFile(QString::fromUtf8(":/new/prefix1/\350\207\252\345\212\250.png"), QSize(), QIcon::Normal, QIcon::Off);
         autosave->setIcon(icon18);
+        insertoroverwrite = new QAction(MainWindow);
+        insertoroverwrite->setObjectName(QStringLiteral("insertoroverwrite"));
+        zoomIn = new QAction(MainWindow);
+        zoomIn->setObjectName(QStringLiteral("zoomIn"));
+        QIcon icon19;
+        icon19.addFile(QString::fromUtf8(":/new/prefix1/\346\224\276\345\244\247.png"), QSize(), QIcon::Normal, QIcon::Off);
+        zoomIn->setIcon(icon19);
+        zoomOut = new QAction(MainWindow);
+        zoomOut->setObjectName(QStringLiteral("zoomOut"));
+        QIcon icon20;
+        icon20.addFile(QString::fromUtf8(":/new/prefix1/\347\274\251\345\260\217.png"), QSize(), QIcon::Normal, QIcon::Off);
+        zoomOut->setIcon(icon20);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
         horizontalLayout = new QHBoxLayout(centralwidget);
@@ -216,6 +232,8 @@ public:
         menu_T->setObjectName(QStringLiteral("menu_T"));
         menu_S = new QMenu(menubar);
         menu_S->setObjectName(QStringLiteral("menu_S"));
+        menu_Z = new QMenu(menu_S);
+        menu_Z->setObjectName(QStringLiteral("menu_Z"));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName(QStringLiteral("statusbar"));
@@ -257,6 +275,10 @@ public:
         menu_T->addAction(layout);
         menu_T->addAction(findandreplace);
         menu_S->addAction(autosave);
+        menu_S->addAction(insertoroverwrite);
+        menu_S->addAction(menu_Z->menuAction());
+        menu_Z->addAction(zoomIn);
+        menu_Z->addAction(zoomOut);
         toolBar->addAction(newfile);
         toolBar->addAction(openfile);
         toolBar->addAction(save);
@@ -337,12 +359,25 @@ public:
 #endif // QT_NO_SHORTCUT
         fontcolor->setText(QApplication::translate("MainWindow", "\345\255\227\344\275\223\351\242\234\350\211\262", Q_NULLPTR));
         autosave->setText(QApplication::translate("MainWindow", "\350\207\252\345\212\250\344\277\235\345\255\230(&A)", Q_NULLPTR));
+        insertoroverwrite->setText(QApplication::translate("MainWindow", "\346\224\271\345\206\231\346\250\241\345\274\217", Q_NULLPTR));
+#ifndef QT_NO_SHORTCUT
+        insertoroverwrite->setShortcut(QApplication::translate("MainWindow", "Ctrl+I", Q_NULLPTR));
+#endif // QT_NO_SHORTCUT
+        zoomIn->setText(QApplication::translate("MainWindow", "\346\224\276\345\244\247(&I)", Q_NULLPTR));
+#ifndef QT_NO_SHORTCUT
+        zoomIn->setShortcut(QApplication::translate("MainWindow", "Ctrl+=", Q_NULLPTR));
+#endif // QT_NO_SHORTCUT
+        zoomOut->setText(QApplication::translate("MainWindow", "\347\274\251\345\260\217(&O)", Q_NULLPTR));
+#ifndef QT_NO_SHORTCUT
+        zoomOut->setShortcut(QApplication::translate("MainWindow", "Ctrl+-", Q_NULLPTR));
+#endif // QT_NO_SHORTCUT
         file->setTitle(QApplication::translate("MainWindow", "\346\226\207\344\273\266(&F)", Q_NULLPTR));
         operation->setTitle(QApplication::translate("MainWindow", "\347\274\226\350\276\221(&E)", Q_NULLPTR));
         menu_H->setTitle(QApplication::translate("MainWindow", "\345\270\256\345\212\251(&H)", Q_NULLPTR));
         menu_C->setTitle(QApplication::translate("MainWindow", "\346\226\207\345\255\227(&C)", Q_NULLPTR));
         menu_T->setTitle(QApplication::translate("MainWindow", "\345\267\245\345\205\267(&T)", Q_NULLPTR));
         menu_S->setTitle(QApplication::translate("MainWindow", "\350\256\276\347\275\256(&S)", Q_NULLPTR));
+        menu_Z->setTitle(QApplication::translate("MainWindow", "\347\274\251\346\224\276(&Z)", Q_NULLPTR));
         toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", Q_NULLPTR));
     } // retranslateUi
 

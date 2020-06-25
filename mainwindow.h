@@ -21,6 +21,10 @@ class MainWindow : public QMainWindow
     QString findString;
     QString replaceString;
     QTimer *timer_autosave;
+    enum {LEFT,UP,RIGHT,NO} hide = NO;
+
+    bool isDraged;
+    QPoint mousePos;
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -33,10 +37,21 @@ public:
     void setFont();
     void setLayout();
     void insertTimeAndDate();
-    void dragEnterEvent(QDragEnterEvent*event);
-    void dropEvent(QDropEvent*event);
+    void dragEnterEvent(QDragEnterEvent*event) override;
+    void dropEvent(QDropEvent*event) override;
     void setFontColor();
     void autoSave();
+    void changeInputMode();
+    void zoomIn();
+    void zoomOut();
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void enterEvent(QEvent *event) override;
+    void leaveEvent(QEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
 
 private:
     Ui::MainWindow *ui;
