@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>保存.png</file>
+        <file>查找替换.png</file>
+        <file>打开.png</file>
+        <file>关于.png</file>
+        <file>另存为.png</file>
+        <file>排版.png</file>
+        <file>日期.png</file>
+        <file>退出.png</file>
+        <file>文字.png</file>
+        <file>新建文档.png</file>
+        <file>记事本.png</file>
+        <file>撤销.png</file>
+        <file>复制.png</file>
+        <file>剪切.png</file>
+        <file>粘贴.png</file>
+        <file>重做.png</file>
+        <file>全选.png</file>
+        <file>删除.png</file>
+        <file>字体颜色.png</file>
+        <file>自动.png</file>
+        <file>放大.png</file>
+        <file>缩小.png</file>
+    </qresource>
+</RCC>

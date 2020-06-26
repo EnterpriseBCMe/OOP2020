@@ -1,5 +1,7 @@
-#ifndef FINDREPLACE_H
+﻿#ifndef FINDREPLACE_H
 #define FINDREPLACE_H
+
+#pragma execution_character_set("utf-8")
 
 #include <QDialog>
 
@@ -14,15 +16,15 @@ class findreplace : public QDialog
 public:
     explicit findreplace(QWidget *parent = nullptr,QString findString="",QString replaceString="");
     ~findreplace();
-
 private:
     Ui::findreplace *ui;
 signals:
-    void sendFindString(QString);
-    void sendReplaceString(QString,QString);
-public slots:
-    void on_find_clicked();
-    void on_replace_clicked();
+    void sendFindString(QString, bool, bool);
+    void sendReplaceString(QString, QString, bool, bool);
+private slots:
+    void on_findNext_clicked();
+    void on_replaceAll_clicked();
+    void on_replaceNextOne_clicked();
 };
 
 #endif // FINDREPLACE_H

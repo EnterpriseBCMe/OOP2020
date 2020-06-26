@@ -6,9 +6,33 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>687</width>
+    <height>800</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>999999</width>
+    <height>999999</height>
+   </size>
+  </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
+  <property name="acceptDrops">
+   <bool>true</bool>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -17,6 +41,12 @@
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="QScrollArea" name="scrollArea">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border:none;</string>
+      </property>
       <property name="widgetResizable">
        <bool>true</bool>
       </property>
@@ -25,13 +55,22 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>780</width>
-         <height>535</height>
+         <width>669</width>
+         <height>684</height>
         </rect>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QTextEdit" name="mainEdit"/>
+         <widget class="myTextEdit" name="mainEdit">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="acceptDrops">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -44,77 +83,371 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>23</height>
+     <width>687</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="file">
     <property name="title">
-     <string>文件</string>
+     <string>文件(&amp;F)</string>
     </property>
     <addaction name="newfile"/>
     <addaction name="openfile"/>
+    <addaction name="separator"/>
     <addaction name="save"/>
     <addaction name="saveas"/>
+    <addaction name="separator"/>
+    <addaction name="exit"/>
    </widget>
    <widget class="QMenu" name="operation">
     <property name="title">
-     <string>操作</string>
+     <string>编辑(&amp;E)</string>
     </property>
-    <addaction name="findandreplace"/>
+    <addaction name="undo"/>
+    <addaction name="redo"/>
+    <addaction name="separator"/>
+    <addaction name="cut"/>
+    <addaction name="copy"/>
+    <addaction name="paste"/>
+    <addaction name="delete_2"/>
+    <addaction name="separator"/>
+    <addaction name="selectAll"/>
+    <addaction name="timeanddate"/>
+   </widget>
+   <widget class="QMenu" name="menu_H">
+    <property name="title">
+     <string>帮助(&amp;H)</string>
+    </property>
+    <addaction name="about"/>
+   </widget>
+   <widget class="QMenu" name="menu_C">
+    <property name="title">
+     <string>文字(&amp;C)</string>
+    </property>
     <addaction name="format"/>
+    <addaction name="fontcolor"/>
+   </widget>
+   <widget class="QMenu" name="menu_T">
+    <property name="title">
+     <string>工具(&amp;T)</string>
+    </property>
     <addaction name="layout"/>
+    <addaction name="findandreplace"/>
+   </widget>
+   <widget class="QMenu" name="menu_S">
+    <property name="title">
+     <string>设置(&amp;S)</string>
+    </property>
+    <widget class="QMenu" name="menu_Z">
+     <property name="title">
+      <string>缩放(&amp;Z)</string>
+     </property>
+     <addaction name="zoomIn"/>
+     <addaction name="zoomOut"/>
+    </widget>
+    <addaction name="autosave"/>
+    <addaction name="insertoroverwrite"/>
+    <addaction name="menu_Z"/>
    </widget>
    <addaction name="file"/>
    <addaction name="operation"/>
+   <addaction name="menu_C"/>
+   <addaction name="menu_T"/>
+   <addaction name="menu_H"/>
+   <addaction name="menu_S"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="acceptDrops">
+    <bool>false</bool>
+   </property>
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>24</width>
+     <height>24</height>
+    </size>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
+   <property name="floatable">
+    <bool>true</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="newfile"/>
+   <addaction name="openfile"/>
+   <addaction name="save"/>
+   <addaction name="saveas"/>
+   <addaction name="separator"/>
+   <addaction name="format"/>
+   <addaction name="fontcolor"/>
+   <addaction name="separator"/>
+   <addaction name="layout"/>
+   <addaction name="findandreplace"/>
+  </widget>
   <action name="newfile">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/新建文档.png</normaloff>:/new/prefix1/新建文档.png</iconset>
+   </property>
    <property name="text">
-    <string>新建</string>
+    <string>新建(&amp;N)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
   <action name="openfile">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/打开.png</normaloff>:/new/prefix1/打开.png</iconset>
+   </property>
    <property name="text">
-    <string>打开</string>
+    <string>打开(&amp;O)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="save">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/保存.png</normaloff>:/new/prefix1/保存.png</iconset>
+   </property>
    <property name="text">
-    <string>保存</string>
+    <string>保存(&amp;S)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="saveas">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/另存为.png</normaloff>:/new/prefix1/另存为.png</iconset>
+   </property>
    <property name="text">
-    <string>另存为</string>
+    <string>另存为(&amp;A)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
   <action name="findandreplace">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/查找替换.png</normaloff>:/new/prefix1/查找替换.png</iconset>
+   </property>
    <property name="text">
-    <string>查找与替换</string>
+    <string>查找与替换(&amp;F)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
    </property>
   </action>
   <action name="format">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/文字.png</normaloff>:/new/prefix1/文字.png</iconset>
+   </property>
    <property name="text">
     <string>文字格式</string>
    </property>
   </action>
   <action name="layout">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/排版.png</normaloff>:/new/prefix1/排版.png</iconset>
+   </property>
    <property name="text">
-    <string>排版设置</string>
+    <string>页面排版(&amp;U)</string>
    </property>
   </action>
   <action name="undo">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/撤销.png</normaloff>:/new/prefix1/撤销.png</iconset>
+   </property>
    <property name="text">
-    <string>撤销</string>
+    <string>撤销(&amp;Z)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
    </property>
   </action>
   <action name="redo">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/重做.png</normaloff>:/new/prefix1/重做.png</iconset>
+   </property>
    <property name="text">
-    <string>重做</string>
+    <string>重做(&amp;R)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="timeanddate">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/日期.png</normaloff>:/new/prefix1/日期.png</iconset>
+   </property>
+   <property name="text">
+    <string>时间/日期</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="exit">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/退出.png</normaloff>:/new/prefix1/退出.png</iconset>
+   </property>
+   <property name="text">
+    <string>退出(&amp;E)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="about">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/关于.png</normaloff>:/new/prefix1/关于.png</iconset>
+   </property>
+   <property name="text">
+    <string>关于(&amp;A)</string>
+   </property>
+  </action>
+  <action name="cut">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/剪切.png</normaloff>:/new/prefix1/剪切.png</iconset>
+   </property>
+   <property name="text">
+    <string>剪切(&amp;T)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="copy">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/复制.png</normaloff>:/new/prefix1/复制.png</iconset>
+   </property>
+   <property name="text">
+    <string>复制(&amp;C)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="paste">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/粘贴.png</normaloff>:/new/prefix1/粘贴.png</iconset>
+   </property>
+   <property name="text">
+    <string>粘贴(&amp;P)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="selectAll">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/全选.png</normaloff>:/new/prefix1/全选.png</iconset>
+   </property>
+   <property name="text">
+    <string>全选(&amp;A)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="delete_2">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/删除.png</normaloff>:/new/prefix1/删除.png</iconset>
+   </property>
+   <property name="text">
+    <string>删除(&amp;L)</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
+  </action>
+  <action name="fontcolor">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/字体颜色.png</normaloff>:/new/prefix1/字体颜色.png</iconset>
+   </property>
+   <property name="text">
+    <string>字体颜色</string>
+   </property>
+  </action>
+  <action name="autosave">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/自动.png</normaloff>:/new/prefix1/自动.png</iconset>
+   </property>
+   <property name="text">
+    <string>自动保存(&amp;A)</string>
+   </property>
+  </action>
+  <action name="insertoroverwrite">
+   <property name="text">
+    <string>改写模式</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="zoomIn">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/放大.png</normaloff>:/new/prefix1/放大.png</iconset>
+   </property>
+   <property name="text">
+    <string>放大(&amp;I)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+=</string>
+   </property>
+  </action>
+  <action name="zoomOut">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/缩小.png</normaloff>:/new/prefix1/缩小.png</iconset>
+   </property>
+   <property name="text">
+    <string>缩小(&amp;O)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+-</string>
    </property>
   </action>
  </widget>
- <resources/>
+ <customwidgets>
+  <customwidget>
+   <class>myTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>mytextedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="image/image.qrc"/>
+ </resources>
  <connections/>
 </ui>
