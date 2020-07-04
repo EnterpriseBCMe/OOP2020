@@ -23,7 +23,6 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QPoint>
-#include <QLabel>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -45,8 +44,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->insertoroverwrite,&QAction::triggered,this,&MainWindow::changeInputMode);
     connect(ui->zoomIn,&QAction::triggered,this,&MainWindow::zoomIn);
     connect(ui->zoomOut,&QAction::triggered,this,&MainWindow::zoomOut);
-    connect(ui->fullscreen,&QAction::triggered,this,&MainWindow::fullScreen);
-    connect(ui->formatbrush,&QAction::triggered,this,&MainWindow::formatBrush);
     this->fr = new findreplace(this);
     this->lo = new class layout(this);
     this->as = new autosave(this);
@@ -59,12 +56,10 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowTitle(tr("简单的文档编辑系统"));
     this->setAcceptDrops(true);
 
-    this->setWindowFlags(Qt::WindowStaysOnTopHint);  // 窗口保持在最上层
-
     timer_autosave = new QTimer(this);
     connect(timer_autosave, SIGNAL(timeout()), this, SLOT(handleAutoSave()));
 
-    this->statusBar()->setStyleSheet("QStatusBar{border-top:1px solid lightgray;}");
+    this->setWindowFlags(Qt::WindowStaysOnTopHint);
 }
 
 MainWindow::~MainWindow()
@@ -87,28 +82,30 @@ void MainWindow::newFile()
 
 void MainWindow::openFile()
 {
-    filename=QFileDialog::getOpenFileName(this, tr("打开文档"), ".", tr("文本文档(*.txt);;网页(*.htm;*.html)"));
+    filename=QFileDialog::getOpenFileName(this, tr("打开文档"), ".", tr("文本文档(*.txt);;网页(*.htm;*.html);;PDF(*.pdf);;Word 文档(*.docx);;Word 97-2003文档(*.doc)"));
     if(filename.length() == 0)
         return;
 
     QFile textFile(filename);
     if(!textFile.exists())
     {
-        QMessageBox::information(NULL, tr("提示"), tr("文件不存在"));
+        QMessageBox::information(NULL, tr("Path"), tr("文件不存在"));
         return;
     }
     if(!textFile.open(QIODevice::ReadOnly|QIODevice::Text))
     {
-        QMessageBox::information(NULL, tr("提示"), tr("文件打开失败"));
+        QMessageBox::information(NULL, tr("Path"), tr("文件打开失败"));
         return;
     }
 
     QTextStream in(&textFile);
-    in.setCodec("UTF-8");
     if(QRegularExpression("txt$").match(filename).hasMatch())
         ui->mainEdit->setText(in.readAll());
     else if(QRegularExpression("html$").match(filename).hasMatch())
+    {
+        in.setCodec("UTF-8");
         ui->mainEdit->setHtml(in.readAll());
+    }
 
     this->setWindowTitle(filename);
     textFile.close();
@@ -189,9 +186,9 @@ void MainWindow::setFont()
     QTextCharFormat format;
     QTextCursor cursor=ui->mainEdit->textCursor();
     cursor.beginEditBlock();
-    format.setFont(QFontDialog::getFont(&ok,this));
+    format.setFont(QFontDialog::getFont(&ok));
     if(ok){
-        cursor.setCharFormat(format);  // 对选中部分的样式进行修改
+        cursor.setCharFormat(format);
     }
     cursor.endEditBlock();
 }
@@ -212,7 +209,7 @@ void MainWindow::receiveFindString(QString fs, bool isCaseSensetive, bool isCycl
     if(!ui->mainEdit->find(findString, isCaseSensetive ? QTextDocument::FindCaseSensitively : QTextDocument::FindFlag()))
     {
         if(isCycle)
-            ui->mainEdit->moveCursor(QTextCursor::Start);  // 如果设置了循环查找且没有找到下一个，从文档头部开始继续查找
+            ui->mainEdit->moveCursor(QTextCursor::Start);
         else
             QMessageBox::information(NULL, tr("Path"), "未找到指定字符串!");
     }
@@ -282,7 +279,6 @@ void MainWindow::insertTimeAndDate()
 
 void MainWindow::dragEnterEvent(QDragEnterEvent* event)
 {
-    // 接受指定格式的文件拖入窗口打开
     QString extension = event->mimeData()->urls()[0].fileName();
     if(QRegularExpression("(txt$)|(html$)|(htm$)|(png$)|(jpg$)|(jpeg$)|(bmp$)|(gif$)").match(extension).hasMatch())
         event->acceptProposedAction();
@@ -340,7 +336,7 @@ void MainWindow::autoSave()
 void MainWindow::receiveAutoSave(bool isAutoSave, int interval)
 {
     if(isAutoSave)
-        MainWindow::timer_autosave->start(interval * 1000);  // 启用自动保存定时器
+        MainWindow::timer_autosave->start(interval * 1000);
     else
         MainWindow::timer_autosave->stop();
 }
@@ -399,12 +395,15 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
     }
 }
 
-void MainWindow::fullScreen()
+void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    if(windowState() != Qt::WindowFullScreen)
-        setWindowState(Qt::WindowFullScreen);
-    else
-        setWindowState(Qt::WindowNoState);
+    if(event->key() == Qt::Key_F11)
+    {
+        if(windowState() != Qt::WindowFullScreen)
+            setWindowState(Qt::WindowFullScreen);
+        else
+            setWindowState(Qt::WindowNoState);
+    }
 }
 
 void MainWindow::wheelEvent(QWheelEvent *event)
@@ -426,7 +425,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         mousePos = event->pos();
     }
 
-    // 在非全屏模式下检测是否贴边
     if(!isFullScreen())
     {
         if(x() < 1)
@@ -442,7 +440,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 
 void MainWindow::enterEvent(QEvent *event)
 {
-    // 鼠标进入窗口时，若窗口被隐藏，则展示显示动画
     if(hide == NO)
         return;
     Q_UNUSED(event);
@@ -460,7 +457,6 @@ void MainWindow::enterEvent(QEvent *event)
 
 void MainWindow::leaveEvent(QEvent *event)
 {
-    // 鼠标移出窗口后，若hide不为NO，则继续隐藏
     if(hide == NO)
         return;
     Q_UNUSED(event);
@@ -478,7 +474,6 @@ void MainWindow::leaveEvent(QEvent *event)
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    // 支持在窗口内部拖拽进行整个窗体的移动
     if(isDraged)
     {
         QPoint distance = event->pos() - mousePos;
@@ -502,44 +497,4 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
         else
             hide = NO;
     }
-}
-
-void MainWindow::formatBrush()
-{
-    static bool isFormat = false;
-    static QLabel *prompt;
-    static QTextCharFormat format;
-    const static QTextCharFormat defaultFormat;
-
-    // 如果用户按下Ctrl+Shift+V，对选中部分应用格式刷
-    if(this->keyEvent->key() == Qt::Key_V && this->keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier))
-    {
-        if(isFormat && ui->mainEdit->textCursor().hasSelection())
-        {
-            if(!format.isEmpty())
-                ui->mainEdit->textCursor().setCharFormat(format);
-            else
-                ui->mainEdit->textCursor().setCharFormat(defaultFormat);
-        }
-    }
-    else
-    {
-        if(!isFormat)
-        {
-            // 获取用户选中文本的格式
-            format = ui->mainEdit->textCursor().charFormat();
-            prompt = new QLabel("格式刷已开启");
-            ui->statusbar->addWidget(prompt);
-        }
-        else
-            ui->statusbar->removeWidget(prompt);
-        isFormat = !isFormat;
-    }
-}
-
-void MainWindow::keyPressEvent(QKeyEvent *event)
-{
-    this->keyEvent = event;
-    if (event->key() == Qt::Key_V && event->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier))
-        formatBrush();
 }

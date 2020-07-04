@@ -4,7 +4,6 @@
 #include <QTextStream>
 #include <QRegularExpression>
 #include <QImageReader>
-#include <QDebug>
 
 myTextEdit::myTextEdit(QWidget *parent):QTextEdit(parent)
 {
@@ -16,15 +15,11 @@ myTextEdit::~myTextEdit()
 
 void myTextEdit::dragEnterEvent(QDragEnterEvent* event)
 {
-    if(event->mimeData()->hasUrls())
-    {
-        QString extension = event->mimeData()->urls()[0].fileName();
-        qDebug() << extension;
-        if(QRegularExpression("(png$)|(jpg$)|(jpeg$)|(bmp$)|(gif$)").match(extension).hasMatch())
-            event->acceptProposedAction();
-        else
-            event->ignore();
-    }
+    QString extension = event->mimeData()->urls()[0].fileName();
+    if(QRegularExpression("(png$)|(jpg$)|(jpeg$)|(bmp$)|(gif$)").match(extension).hasMatch())
+        event->acceptProposedAction();
+    else
+        event->ignore();
 }
 
 void myTextEdit::dropEvent(QDropEvent *event)

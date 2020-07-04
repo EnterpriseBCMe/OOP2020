@@ -1,4 +1,5 @@
 ﻿#include "mainwindow.h"
+#include "splashscreen.h"
 #include <QApplication>
 #include <QTranslator>
 #include <QPixmap>
@@ -19,13 +20,27 @@ int main(int argc, char *argv[])
 
     QTranslator tran;
     QString dir = a.applicationDirPath();
-    if (tran.load(QLocale(), "qt", "_", dir, ".qm"))  // 翻译
+    if (tran.load(QLocale(), "qt", "_", dir, ".qm"))
         a.installTranslator(&tran);
 
-    a.setWindowIcon(QIcon("./image/myico.ico"));  // 设置程序图标
+    a.setWindowIcon(QIcon("./image/myico.ico"));
+
+    QPixmap pixmap("./image/splash.png");
+    pixmap = pixmap.scaled(654, 463, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    SplashScreen splash(pixmap, 4000);
+    splash.show();
 
     MainWindow w;
     w.show();
 
     return a.exec();
 }
+
+
+//TODO:右键菜单操作以及调色盘部分控件的翻译
+//TODO:在窗口内打开多个文本编辑框（QTabWidget）
+//TODO:模态启动界面
+//TODO:整体美化
+//TODO:格式刷
+//TODO:插入图片后光标不闪烁的问题，以及从word中拖入图片报错：index out of range
+//TODO:贴边隐藏后无法关闭程序(鼠标移到标题栏会触发leaveEvent)

@@ -22,9 +22,9 @@ class MainWindow : public QMainWindow
     QString replaceString;
     QTimer *timer_autosave;
     enum {LEFT,UP,RIGHT,NO} hide = NO;
+
     bool isDraged;
     QPoint mousePos;
-    QKeyEvent *keyEvent;
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -44,16 +44,14 @@ public:
     void changeInputMode();
     void zoomIn();
     void zoomOut();
-    void fullScreen();
-    void formatBrush();
     void mouseDoubleClickEvent(QMouseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void enterEvent(QEvent *event) override;
     void leaveEvent(QEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
-    void keyPressEvent(QKeyEvent *event) override;
 
 private:
     Ui::MainWindow *ui;
