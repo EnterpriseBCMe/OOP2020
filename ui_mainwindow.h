@@ -51,6 +51,8 @@ public:
     QAction *insertoroverwrite;
     QAction *zoomIn;
     QAction *zoomOut;
+    QAction *fullscreen;
+    QAction *formatbrush;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout;
     QScrollArea *scrollArea;
@@ -189,6 +191,16 @@ public:
         QIcon icon20;
         icon20.addFile(QString::fromUtf8(":/new/prefix1/\347\274\251\345\260\217.png"), QSize(), QIcon::Normal, QIcon::Off);
         zoomOut->setIcon(icon20);
+        fullscreen = new QAction(MainWindow);
+        fullscreen->setObjectName(QStringLiteral("fullscreen"));
+        QIcon icon21;
+        icon21.addFile(QString::fromUtf8(":/new/prefix1/\345\205\250\345\261\217 .png"), QSize(), QIcon::Normal, QIcon::Off);
+        fullscreen->setIcon(icon21);
+        formatbrush = new QAction(MainWindow);
+        formatbrush->setObjectName(QStringLiteral("formatbrush"));
+        QIcon icon22;
+        icon22.addFile(QString::fromUtf8(":/new/prefix1/\346\240\274\345\274\217\345\210\267.png"), QSize(), QIcon::Normal, QIcon::Off);
+        formatbrush->setIcon(icon22);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
         horizontalLayout = new QHBoxLayout(centralwidget);
@@ -274,12 +286,13 @@ public:
         menu_C->addAction(fontcolor);
         menu_T->addAction(layout);
         menu_T->addAction(findandreplace);
+        menu_T->addAction(formatbrush);
         menu_S->addAction(autosave);
-        menu_S->addAction(insertoroverwrite);
+        menu_S->addAction(fullscreen);
         menu_S->addAction(menu_Z->menuAction());
+        menu_S->addAction(insertoroverwrite);
         menu_Z->addAction(zoomIn);
         menu_Z->addAction(zoomOut);
-        toolBar->addAction(newfile);
         toolBar->addAction(openfile);
         toolBar->addAction(save);
         toolBar->addAction(saveas);
@@ -289,6 +302,7 @@ public:
         toolBar->addSeparator();
         toolBar->addAction(layout);
         toolBar->addAction(findandreplace);
+        toolBar->addAction(formatbrush);
 
         retranslateUi(MainWindow);
 
@@ -370,6 +384,14 @@ public:
         zoomOut->setText(QApplication::translate("MainWindow", "\347\274\251\345\260\217(&O)", Q_NULLPTR));
 #ifndef QT_NO_SHORTCUT
         zoomOut->setShortcut(QApplication::translate("MainWindow", "Ctrl+-", Q_NULLPTR));
+#endif // QT_NO_SHORTCUT
+        fullscreen->setText(QApplication::translate("MainWindow", "\345\205\250\345\261\217", Q_NULLPTR));
+#ifndef QT_NO_SHORTCUT
+        fullscreen->setShortcut(QApplication::translate("MainWindow", "F11", Q_NULLPTR));
+#endif // QT_NO_SHORTCUT
+        formatbrush->setText(QApplication::translate("MainWindow", "\346\240\274\345\274\217\345\210\267", Q_NULLPTR));
+#ifndef QT_NO_SHORTCUT
+        formatbrush->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+C", Q_NULLPTR));
 #endif // QT_NO_SHORTCUT
         file->setTitle(QApplication::translate("MainWindow", "\346\226\207\344\273\266(&F)", Q_NULLPTR));
         operation->setTitle(QApplication::translate("MainWindow", "\347\274\226\350\276\221(&E)", Q_NULLPTR));

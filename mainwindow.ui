@@ -133,6 +133,7 @@
     </property>
     <addaction name="layout"/>
     <addaction name="findandreplace"/>
+    <addaction name="formatbrush"/>
    </widget>
    <widget class="QMenu" name="menu_S">
     <property name="title">
@@ -146,8 +147,9 @@
      <addaction name="zoomOut"/>
     </widget>
     <addaction name="autosave"/>
-    <addaction name="insertoroverwrite"/>
+    <addaction name="fullscreen"/>
     <addaction name="menu_Z"/>
+    <addaction name="insertoroverwrite"/>
    </widget>
    <addaction name="file"/>
    <addaction name="operation"/>
@@ -182,7 +184,6 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="newfile"/>
    <addaction name="openfile"/>
    <addaction name="save"/>
    <addaction name="saveas"/>
@@ -192,6 +193,7 @@
    <addaction name="separator"/>
    <addaction name="layout"/>
    <addaction name="findandreplace"/>
+   <addaction name="formatbrush"/>
   </widget>
   <action name="newfile">
    <property name="icon">
@@ -436,6 +438,30 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+-</string>
+   </property>
+  </action>
+  <action name="fullscreen">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/全屏 .png</normaloff>:/new/prefix1/全屏 .png</iconset>
+   </property>
+   <property name="text">
+    <string>全屏</string>
+   </property>
+   <property name="shortcut">
+    <string>F11</string>
+   </property>
+  </action>
+  <action name="formatbrush">
+   <property name="icon">
+    <iconset resource="image/image.qrc">
+     <normaloff>:/new/prefix1/格式刷.png</normaloff>:/new/prefix1/格式刷.png</iconset>
+   </property>
+   <property name="text">
+    <string>格式刷</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+C</string>
    </property>
   </action>
  </widget>

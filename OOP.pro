@@ -22,16 +22,14 @@ SOURCES += \
     layout.cpp \
     main.cpp \
     mainwindow.cpp \
-    mytextedit.cpp \
-    splashscreen.cpp
+    mytextedit.cpp
 
 HEADERS += \
     autosave.h \
     findreplace.h \
     layout.h \
     mainwindow.h \
-    mytextedit.h \
-    splashscreen.h
+    mytextedit.h
 
 FORMS += \
     autosave.ui \
